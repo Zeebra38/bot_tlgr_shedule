@@ -6,6 +6,16 @@ __pycache__/
 # C extensions
 *.so
 
+#ignoring my private files
+logs.txt
+config.py
+Baso-01.txt
+Baso-02.txt
+Baso-03.txt
+Baso-04.txt
+Baso-05.txt
+Baso-06.txt
+
 # Distribution / packaging
 .Python
 build/
