@@ -10,7 +10,8 @@ def download():
     soup = bs4.BeautifulSoup(site.text, "html.parser")
     rasp = soup.find_all('div', class_='uk-width-1-2 uk-width-auto@s')
     for line in rasp:
-        if str(line).find('КБиСП') != -1 and str(line).find('2 курс') != -1 and str(line).find('магистр') == -1:
+        if str(line).find('КБиСП') != -1 and str(line).find('2 курс') != -1 and str(line).find('магистр') == -1 and \
+                str(line).find('экз') == -1 and str(line).find('зач') == -1:
             pos_href = str(line).find('http')
             pos_target = str(line).find('target')
             link = str(line)[pos_href:pos_target-2]

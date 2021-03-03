@@ -9,13 +9,15 @@ from main import update
 y = yadisk.YaDisk(token=tokenya)
 time0 = datetime.datetime.now()
 
-def upload_to_disk():
+
+def upload_to_disk(force = False):
     now = datetime.datetime.now()
     global time0
     delta = now - time0
     delta_in_s = delta.total_seconds()
     hours = divmod(delta_in_s, 3600)[0]
-    if fabs(hours) > 1:
+    if fabs(hours) > 1 or force:
+        print(f'uploaded at {datetime.datetime.now()}')
         time0 = datetime.datetime.now()
         try:
             y.upload('logs.txt', '/bot/logs.txt')

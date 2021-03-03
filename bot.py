@@ -5,7 +5,9 @@ from main import todayr, nextd, nextweektoday
 from parser_download import download
 from date import weeknum
 import library as lb
+from threading import Thread
 import yadupload as ya
+
 bot = telebot.TeleBot(token)
 now = datetime.today().hour
 
@@ -14,34 +16,38 @@ now = datetime.today().hour
 def todaym(message):
     lb.chech_user(message.chat.id)
     todayr(message, bot, lb.users[message.chat.id])
-    lb.log(message)
+    Thread(target=lb.log, args=[message]).start()
+    # lb.log(message)
 
 
 @bot.message_handler(commands=["nextday"])
 def nextdm(message):
     lb.chech_user(message.chat.id)
     nextd(message, bot, lb.users[message.chat.id])
-    lb.log(message)
+    Thread(target=lb.log, args=[message]).start()
+    # lb.log(message)
 
 
 @bot.message_handler(commands=["week"])
 def todweek(message):
     lb.chech_user(message.chat.id)
-    lb.log(message)
     msg = []
     for i in range(0, 6):
         msg.append(todayr(message, None, lb.users[message.chat.id], i))
     bot.send_message(message.chat.id, ''.join(msg))
+    Thread(target=lb.log, args=[message]).start()
+    # lb.log(message)
 
 
 @bot.message_handler(commands=["nextweek"])
 def next_week(message):
     lb.chech_user(message.chat.id)
-    lb.log(message)
     msg = []
     for i in range(0, 6):
         msg.append(nextweektoday(message, None, lb.users[message.chat.id], i))
     bot.send_message(message.chat.id, ''.join(msg))
+    Thread(target=lb.log, args=[message]).start()
+    # lb.log(message)
 
 
 @bot.message_handler(commands=['start'])
@@ -49,7 +55,9 @@ def send_welcome(message):
     bot.send_message(message.chat.id, 'Привет, {}! Я бот, который знает твое расписание. Напиши /help, чтобы узнать '
                                       'больше о командах'.format(message.chat.first_name))
     lb.chech_user(message.chat.id)
-    lb.log(message)
+    Thread(target=lb.log, args=[message]).start()
+    # lb.log(message)
+
 
 @bot.message_handler(commands=['time'])
 def send_time(message):
@@ -57,7 +65,8 @@ def send_time(message):
     a = datetime.today()
     bot.send_message(message.chat.id, text='Weeknumber = ' + str(weeknum()) + ', date - ' + str(a))
     del a
-    lb.log(message)
+    Thread(target=lb.log, args=[message]).start()
+    # lb.log(message)
 
 
 @bot.message_handler(commands=['help'])
@@ -75,18 +84,21 @@ def send_help(message):
                          'Напиши /week чтобы увидеть расписание на текущую неделю ил /nextweek для слудующей.'
                          ' /update - обновление файлов, /time - узнать текущее время время. Чтобы изменить текущую '
                          'группу введите номер группы от 1 до 6. Пример "1" = БАСО-01-19. /getlog - получить логи')
-    lb.log(message)
+    Thread(target=lb.log, args=[message]).start()
+    # lb.log(message)
 
 
 @bot.message_handler(commands=['getlog'])
 def send_logs(message):
     f = open('logs.txt', 'rb')
-    bot.send_document(message.chat.id,  f)
+    bot.send_document(message.chat.id, f)
     f.close()
     f = open('users_db.txt', 'rb')
     bot.send_document(message.chat.id, f)
     f.close()
-    lb.log(message)
+    Thread(target=lb.log, args=[message]).start()
+    # lb.log(message)
+
 
 @bot.message_handler(commands=['update'])
 def upd_rp(message):
@@ -95,12 +107,15 @@ def upd_rp(message):
         bot.reply_to(message, 'Хьюстон, у нас проблемы! Файл отсутсвует')
     else:
         bot.reply_to(message, 'Окей, Босс! Все обновлено')
-    lb.log(message)
+    Thread(target=ya.upload_to_disk, args=[True]).start()
+    # ya.upload_to_disk(True)
+    Thread(target=lb.log, args=[message]).start()
+    # lb.log(message)
 
 
 @bot.message_handler(content_types='text')
 def change_gr(message):
-    #try, group of excepts, else, finally
+    # try, group of excepts, else, finally
     try:
         number = int(message.text)
         if number > 6 or number < 1:
@@ -112,7 +127,8 @@ def change_gr(message):
         lb.users[message.chat.id] = number
         lb.zapoln_file(message.chat.id)
         lb.zapoln_db()
-    lb.log(message)
+    Thread(target=lb.log, args=[message]).start()
+    # lb.log(message)
 
 
 if __name__ == '__main__':
@@ -120,8 +136,8 @@ if __name__ == '__main__':
         ya.download_from_disk()
         lb.zapoln_db()
         bot.infinity_polling()
-    except:
-        bot.send_message(526752662, 'Error')
+    except Exception as err:
+        bot.send_message(526752662, f'Error {err}')
         f = open('logs.txt', 'rb')
         bot.send_document(526752662, f)
         f.close()

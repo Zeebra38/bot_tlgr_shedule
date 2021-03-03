@@ -1,16 +1,16 @@
-import re
 from datetime import time
+import re
 
 
 class Obj:
-    order = 0
-    times = time()
-    timee = time()
-    week = 0
-    nazv = ''
-    type = ''
-    prepod = ''
-    cab = ''
+    # order = 0
+    # times = time()
+    # timee = time()
+    # week = 0
+    # nazv = ''
+    # type = ''
+    # prepod = ''
+    # cab = ''
 
     def nazvput(self, s, week):
         v = s.replace(' ', '')
@@ -22,10 +22,16 @@ class Obj:
                 b = s
                 b = b.replace('.', ',')
                 a = [m.start() for m in re.finditer(str(week), b)]
-                for pos in a:
-                    if (b[pos - 1] == ',' or b[pos - 1] == '@' or pos == 0) and (
-                            b[pos + 1] == ',' or b[pos + 2] == ','):
-                        return b
+                if len(str(week)) == 2:
+                    for pos in a:
+                        if (b[pos - 1] == ',' or b[pos - 1] == '@' or pos == 0 or pos == 1) and (
+                                b[pos + 1] == ',' or b[pos + 2] == ',' or b[pos + 1] == ' ' or b[pos + 2] == ' '):
+                            return b
+                else:
+                    for pos in a:
+                        if (b[pos - 1] == ',' or b[pos - 1] == '@' or pos == 0 or pos == 1) and (
+                                b[pos + 1] == ','  or b[pos + 1] == ' ' ):
+                            return b
                 return 'Ничего'
             else:
                 b = s
@@ -47,7 +53,7 @@ class Obj:
             a = [m.start() for m in re.finditer(str(week), v)]
             for pos in a:
                 if (v[pos - 1] == ',' or v[pos - 1] == '@' or v[pos - 1] == '!') and (
-                        v[pos + 1] == ',' or v[pos + 2] == ','):
+                        v[pos + 1] == ',' or v[pos + 2] == ',' or v[pos + 1] == ' ' or v[pos + 2] == ' '):
                     if pos > b:
                         d = s[b + 1:]
                         return d
@@ -65,7 +71,7 @@ class Obj:
             a = [m.start() for m in re.finditer(str(week), nazv)]
             for pos in a:
                 if (nazv[pos - 1] == ',' or nazv[pos - 1] == '@' or nazv[pos - 1] == '!') and (
-                        nazv[pos + 1] == ',' or nazv[pos + 2] == ','):
+                        nazv[pos + 1] == ',' or nazv[pos + 2] == ',' or nazv[pos + 1] == ' ' or nazv[pos + 2] == ' '):
                     if pos > b:
                         v = s[s.find('@') + 1:]
                         return v
@@ -108,7 +114,8 @@ class Obj:
         if v[4] == 'Ничего':
             self.prepod = '---'
         else:
-            self.prepod = v[4]
+            self.prepod = self.typeput(v[4], v[2], week)
+            #self.prepod = v[4]
         if v[5].isalnum():
             self.cab = v[5]
         else:
@@ -119,11 +126,12 @@ class Obj:
 
 
 class Day:
-    maxnaz = 0
-    maxprepod = 0
-    weekday = ''
-    objs = []
-    todobj = []
+    def __init__(self):
+        self.maxnaz = 0
+        self.maxprepod = 0
+        self.weekday = ''
+        self.objs = []
+        self.todobj = []
 
     def show(self, week, today):
         if today == 0:

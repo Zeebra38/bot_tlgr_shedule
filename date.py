@@ -1,7 +1,7 @@
 from datetime import date, timedelta, datetime
 
 def weeknum():
-    zero = datetime(2020, 8, 31)
+    zero = datetime(2021, 2, 8)
     now = datetime.today()
     #now = datetime(2020, 9, 22)
     delta = now - zero
