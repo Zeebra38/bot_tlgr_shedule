@@ -1,3 +1,2 @@
-# bot_tlgr_shedule
-My bot for Telegram to watch my University shedule. I used Heroku to host my bot.
-You can't easily connect this bot to your shedule, so it's just my example to everyone. You can do EVERYTHING you want with programming! Just do it!!!
+Бот с расписанием для вуза
+Данный бот создавался для удобного просмотра раписания в телеграмме. Изначально расписание находится в формате xlxs, что не удобно для использования. Также оно довольно часто обновляется, так что хочется всегда иметь свежую версию не задумываясь об этом
